@@ -11,7 +11,7 @@ import SwiftUI
 struct FlightCheckerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabbarView()
         }
     }
 }

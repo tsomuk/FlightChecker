@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		11A47D242CCE3EEC0062704B /* FlightCheckerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A47D232CCE3EEC0062704B /* FlightCheckerApp.swift */; };
+		11A47D322CCE445B0062704B /* TabbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A47D312CCE445B0062704B /* TabbarView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		11A47D202CCE3EEC0062704B /* FlightChecker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlightChecker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		11A47D232CCE3EEC0062704B /* FlightCheckerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCheckerApp.swift; sourceTree = "<group>"; };
+		11A47D312CCE445B0062704B /* TabbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +39,8 @@
 		11A47D172CCE3EEC0062704B = {
 			isa = PBXGroup;
 			children = (
+				11A47D232CCE3EEC0062704B /* FlightCheckerApp.swift */,
+				11A47D312CCE445B0062704B /* TabbarView.swift */,
 				11A47D222CCE3EEC0062704B /* FlightChecker */,
 				11A47D212CCE3EEC0062704B /* Products */,
 			);
@@ -119,6 +128,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11A47D322CCE445B0062704B /* TabbarView.swift in Sources */,
+				11A47D242CCE3EEC0062704B /* FlightCheckerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +266,7 @@
 				DEVELOPMENT_TEAM = DGS54WN6BX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Flight Checker";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +296,7 @@
 				DEVELOPMENT_TEAM = DGS54WN6BX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Flight Checker";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
