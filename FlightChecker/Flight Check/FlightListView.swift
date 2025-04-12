@@ -21,8 +21,6 @@ struct FlightListView: View {
                     ProgressView().scaleEffect(2)
                 case .list:
                     listWithButton
-                case .error:
-                    ErrorView()
                 }
             }
             .navigationTitle("Favourite Flights")
@@ -60,14 +58,13 @@ struct FlightListView: View {
                 .compositingGroup()
                 
             }
-//            .animation(.linear(duration: 2), value: vm.listOfFlights)
             .scrollIndicators(.hidden)
             .listStyle(.plain)
             
             
           
             Button {
-                vm.fetchFlightDetail()
+                vm.updateAllFlights()
             } label: {
                 AviaButtonLabel(title: "UPDATE FLIGHTS STATUS", color: .primary)
                     .padding(.horizontal, 20)

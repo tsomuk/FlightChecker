@@ -19,7 +19,7 @@ struct EmptyListView: View {
         
             VStack(spacing: 20) {
                 Text("Add new flight \nto track")
-                Image(systemName: "airplane.circle")
+                Image(systemName: "airplane.departure")
                     .scaleEffect(1.5)
         
                 
@@ -30,7 +30,10 @@ struct EmptyListView: View {
     }
 }
 
-#Preview {
-//    EmptyListView()
+#Preview("Empty") {
+    EmptyListView()
+}
+
+#Preview("List") {
     FlightListView()
 }

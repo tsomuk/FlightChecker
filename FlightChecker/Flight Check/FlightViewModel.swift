@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum ScreenState {
-   case empty, loading, list, error
+   case empty, loading, list
 }
 
 final class FlightViewModel: ObservableObject {
@@ -17,22 +17,56 @@ final class FlightViewModel: ObservableObject {
     
     @Published var newFlightNumber = ""
     @Published var showAddNewFlight = false
-    //    @Published var isShowingLoader = false
     @Published var listOfFlightsNumbers : [String] = []
     @Published var listOfFlights: [FlightModel.FlightData] = []
     @Published var screenState: ScreenState = .empty
     
-    
-    //    Данные для верстки и тестов
-    //    @Published var listOfFlightsNumbers: [String] = ["6H881", "6H882", "6H821"]
-    //        @Published var listOfFlights: [FlightModel.FlightData] = [FlightModel.MOCK_FlIGHT, FlightModel.MOCK_FlIGHT, FlightModel.MOCK_FlIGHT]
-    
-    
-    func addNewFlight(_ number: String) {
-        listOfFlightsNumbers.append(number)
-        fetchFlightDetail()
+    @MainActor
+    func updateScreenState() {
+        if listOfFlights.isEmpty {
+            screenState = .empty
+        } else {
+            screenState = .list
+        }
     }
     
+    @MainActor
+    func addNewFlight(_ number: String) {
+        screenState = .loading
+        Task {
+            listOfFlightsNumbers.append(number)
+            fetchFlightDetail(flightNumber: number)
+            updateScreenState()
+        }
+        
+    }
+    
+    @MainActor
+    func updateAllFlights() {
+        screenState = .loading
+        listOfFlights.removeAll()
+        for flightNumber in listOfFlightsNumbers {
+            fetchFlightDetail(flightNumber: flightNumber)
+        }
+        updateScreenState()
+    }
+    
+    func fetchFlightDetail(flightNumber: String) {
+        Task { @MainActor in
+            do {
+                let flightData = try await networkService.requestFlightDetail(code: flightNumber)
+                if let newFlightData = flightData.data.first {
+                    listOfFlights.append(newFlightData)
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+}
+    
+extension FlightViewModel {
+    // MARK: - FUNC FOR THE LIST
     func moveFlight(from: IndexSet, to: Int) {
         listOfFlights.move(fromOffsets: from, toOffset: to)
     }
@@ -42,75 +76,40 @@ final class FlightViewModel: ObservableObject {
             listOfFlights.remove(atOffsets: index)
         }
     }
-    
-    func updateScreenState() {
-        if listOfFlights.isEmpty {
-            screenState = .empty
-        } else {
-            screenState = .list
-        }
-    }
-    
-    func updateAllFlights() {
-        
-    }
-    
-    func fetchFlightDetail() {
-        screenState = .loading
-        listOfFlights.removeAll()
-        Task { @MainActor in
-            for flightNumber in listOfFlightsNumbers {
-                do {
-                    let flightJsonData = try await networkService.requestFlightDetail(code: flightNumber)
-                    if let flight = flightJsonData.data.first {
-                        listOfFlights.append(flight)
-                        
-                    } else {
-                        // show some notification "No data for flight"
-                    }
-                    updateScreenState()
-                } catch {
-                    print(error.localizedDescription)
-                    screenState = .error
-                    print("ошибка")
-                    //                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    //                        self.screenState =
-                    //                        print("нет ошибки")
-                    //                    }
-                }
-                //            updateScreenState()
-            }
-        }
-    }
-    
-    struct TestDTO: Codable {
-        let id: Int?
-        let plane: PlaneDTO?
-        let objects: [ObjectDTO]?
-        
-        struct ObjectDTO: Codable {
-            let id: Int?
-            let name: String?
-        }
-        
-        struct PlaneDTO: Codable {
-            let id: Int?
-            let model: String?
-        }
-    }
-    
-    struct Test {
-        let id: Int
-        let objects: [Object]
-        let planeId: Int
-        let planeModel: String
-        
-        struct Object {
-            let id: Int
-            let name: String
-        }
-    }
-    
+}
+   
+
+
+/*
+ struct TestDTO: Codable {
+     let id: Int?
+     let plane: PlaneDTO?
+     let objects: [ObjectDTO]?
+     
+     struct ObjectDTO: Codable {
+         let id: Int?
+         let name: String?
+     }
+     
+     struct PlaneDTO: Codable {
+         let id: Int?
+         let model: String?
+     }
+ }
+ 
+ struct Test {
+     let id: Int
+     let objects: [Object]
+     let planeId: Int
+     let planeModel: String
+     
+     struct Object {
+         let id: Int
+         let name: String
+     }
+ }
+ 
+ 
     func mapTest(_ dto: TestDTO) throws -> Test {
         guard let id = dto.id,
               let plane = dto.plane,
@@ -135,4 +134,11 @@ final class FlightViewModel: ObservableObject {
         )
         
     }
-}
+
+*/ //UI MODEL
+
+
+//    Данные для верстки и тестов
+//    @Published var listOfFlightsNumbers : [String] = ["fr269", "fr1215", "fr2357"]
+//    @Published var listOfFlightsNumbers: [String] = ["6H881", "6H882", "6H821"]
+//    @Published var listOfFlights: [FlightModel.FlightData] = [FlightModel.MOCK_FlIGHT, FlightModel.MOCK_FlIGHT, FlightModel.MOCK_FlIGHT]

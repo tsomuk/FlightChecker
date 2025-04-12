@@ -105,7 +105,6 @@ final class NetworkService {
             let response = try decoder.decode(T.self, from: data)
             return response
         } catch {
-            print(error)
             throw NetworkError.parsingError(underline: error)
         }
     }
@@ -113,7 +112,6 @@ final class NetworkService {
 
 // MARK: - NetworkService request functions
 extension NetworkService {
-    
     func requestFlightDetail(code: String) async throws -> FlightModel {
         try await fetchRequest(endpoint: Endpoint.flight(code: code), apiKey: .flightApiKey, method: .get)
     }

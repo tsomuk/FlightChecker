@@ -13,7 +13,7 @@ struct TabbarView: View {
             FlightListView()
                 .tabItem { Label("Flight check", systemImage: "airplane") }
             
-            Text("Second view")
+            AirportList()
                 .tabItem { Label("Airport", systemImage: "airplane.departure") }
             
         }
