@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum ScreenState {
-   case empty, loading, list
+    case empty, loading, list
 }
 
 final class FlightViewModel: ObservableObject {
@@ -36,7 +36,7 @@ final class FlightViewModel: ObservableObject {
         Task {
             listOfFlightsNumbers.append(number)
             fetchFlightDetail(flightNumber: number)
-            updateScreenState()
+            
         }
         
     }
@@ -48,15 +48,24 @@ final class FlightViewModel: ObservableObject {
         for flightNumber in listOfFlightsNumbers {
             fetchFlightDetail(flightNumber: flightNumber)
         }
-        updateScreenState()
+//        updateScreenState()
     }
     
+    @MainActor
     func fetchFlightDetail(flightNumber: String) {
-        Task { @MainActor in
+//        screenState = .loading
+        Task {
             do {
                 let flightData = try await networkService.requestFlightDetail(code: flightNumber)
                 if let newFlightData = flightData.data.first {
-                    listOfFlights.append(newFlightData)
+                    print(newFlightData)
+                    withAnimation {
+                        listOfFlights.append(newFlightData)
+                    }
+                    print("✅ Start sleep for 2 seconds")
+                    try await Task.sleep(for: .seconds(1.2))
+                    print("🛜 End of sleep for 2 seconds")
+                    updateScreenState()
                 }
             } catch {
                 print(error.localizedDescription)
@@ -64,7 +73,7 @@ final class FlightViewModel: ObservableObject {
         }
     }
 }
-    
+
 extension FlightViewModel {
     // MARK: - FUNC FOR THE LIST
     func moveFlight(from: IndexSet, to: Int) {
@@ -77,65 +86,65 @@ extension FlightViewModel {
         }
     }
 }
-   
+
 
 
 /*
  struct TestDTO: Codable {
-     let id: Int?
-     let plane: PlaneDTO?
-     let objects: [ObjectDTO]?
-     
-     struct ObjectDTO: Codable {
-         let id: Int?
-         let name: String?
-     }
-     
-     struct PlaneDTO: Codable {
-         let id: Int?
-         let model: String?
-     }
+ let id: Int?
+ let plane: PlaneDTO?
+ let objects: [ObjectDTO]?
+ 
+ struct ObjectDTO: Codable {
+ let id: Int?
+ let name: String?
+ }
+ 
+ struct PlaneDTO: Codable {
+ let id: Int?
+ let model: String?
+ }
  }
  
  struct Test {
-     let id: Int
-     let objects: [Object]
-     let planeId: Int
-     let planeModel: String
-     
-     struct Object {
-         let id: Int
-         let name: String
-     }
+ let id: Int
+ let objects: [Object]
+ let planeId: Int
+ let planeModel: String
+ 
+ struct Object {
+ let id: Int
+ let name: String
+ }
  }
  
  
-    func mapTest(_ dto: TestDTO) throws -> Test {
-        guard let id = dto.id,
-              let plane = dto.plane,
-              let planeID = plane.id else { throw NetworkError.invalidData }
-        
-        func mapObject(_ object: TestDTO.ObjectDTO) -> Test.Object {
-            .init(
-                id: object.id ?? 0,
-                name: object.name ?? ""
-            )
-        }
-        
-        let objects = dto.objects?.compactMap { objectDTO in
-            return mapObject(objectDTO)
-        } ?? []
-        
-        return .init(
-            id: id,
-            objects: objects,
-            planeId: planeID,
-            planeModel: plane.model ?? ""
-        )
-        
-    }
-
-*/ //UI MODEL
+ func mapTest(_ dto: TestDTO) throws -> Test {
+ guard let id = dto.id,
+ let plane = dto.plane,
+ let planeID = plane.id else { throw NetworkError.invalidData }
+ 
+ func mapObject(_ object: TestDTO.ObjectDTO) -> Test.Object {
+ .init(
+ id: object.id ?? 0,
+ name: object.name ?? ""
+ )
+ }
+ 
+ let objects = dto.objects?.compactMap { objectDTO in
+ return mapObject(objectDTO)
+ } ?? []
+ 
+ return .init(
+ id: id,
+ objects: objects,
+ planeId: planeID,
+ planeModel: plane.model ?? ""
+ )
+ 
+ }
+ 
+ */ //UI MODEL
 
 
 //    Данные для верстки и тестов

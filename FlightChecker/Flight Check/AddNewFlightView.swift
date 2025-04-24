@@ -16,7 +16,7 @@ struct AddNewFlightView: View {
     enum Focus { case newFlight }
     
     var body: some View {
-            VStack {
+        VStack(spacing: 15) {
                 TextField("Flight number", text: $vm.newFlightNumber)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.characters)
@@ -32,12 +32,13 @@ struct AddNewFlightView: View {
                     }
                     .padding(.top, 30)
                     
-                Spacer()
+                
               
                 
                 Button {
                     dismiss()
                     vm.addNewFlight(vm.newFlightNumber)
+//                    vm.fetchFlightDetail(flightNumber: vm.newFlightNumber)
                     vm.newFlightNumber = ""
                 } label: {
                     AviaButtonLabel(title: "ADD NEW FLIGHT", color: .white)
@@ -46,13 +47,13 @@ struct AddNewFlightView: View {
             }
             .padding(.horizontal)
             .onAppear { isFocus = true }
-            .background(
-                Image(.plane)
-                    .resizable()
-                    .ignoresSafeArea()
-                    .opacity(0.7)
-                    .blur(radius: 0.7)
-            )
+//            .background(
+//                Image(.plane)
+//                    .resizable()
+//                    .ignoresSafeArea()
+//                    .opacity(0.7)
+//                    .blur(radius: 0.7)
+//            )
     }
 }
 
