@@ -24,7 +24,7 @@ struct InfoLine: View {
                 .minimumScaleFactor(0.4)
                 .multilineTextAlignment(.trailing)
         }
-        .foregroundStyle(Color.aviaGreen)
+        .foregroundStyle(.green)
     }
 }
 

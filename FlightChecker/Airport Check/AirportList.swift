@@ -9,7 +9,15 @@ import SwiftUI
 
 struct AirportList: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: 40) {
+            Text("Hello, World!")
+                .foregroundStyle(.accent)
+                .font(.title)
+                .bold()
+                .fontWeight(.semibold)
+            Image(.airportIcon)
+                .foregroundStyle(.accent)
+        }
     }
 }
 

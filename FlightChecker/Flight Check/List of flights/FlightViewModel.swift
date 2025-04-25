@@ -78,11 +78,13 @@ extension FlightViewModel {
     // MARK: - FUNC FOR THE LIST
     func moveFlight(from: IndexSet, to: Int) {
         listOfFlights.move(fromOffsets: from, toOffset: to)
+        listOfFlightsNumbers.move(fromOffsets: from, toOffset: to)
     }
     
     func deleteFlight(index: IndexSet) {
         withAnimation(.easeInOut(duration: 0.5)) {
             listOfFlights.remove(atOffsets: index)
+            listOfFlightsNumbers.remove(atOffsets: index)
         }
     }
 }

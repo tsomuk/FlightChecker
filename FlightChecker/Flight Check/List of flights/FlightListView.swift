@@ -39,7 +39,7 @@ struct FlightListView: View {
                 }
                 .sheet(isPresented: $vm.showAddNewFlight) {
                     AddNewFlightView(vm: vm)
-                        .presentationDetents([.height(120)])
+                        .presentationDetents([.height(200)])
                 }
         } .onAppear {
             vm.updateScreenState()
