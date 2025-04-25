@@ -33,13 +33,16 @@ struct FlightListView: View {
                                 .tint(.primary)
                         }
                     }
-                    ToolbarItem(placement: .topBarLeading) { EditButton()
-                            .tint(.primary)
+                    if !vm.listOfFlightsNumbers.isEmpty {
+                        ToolbarItem(placement: .topBarLeading) { EditButton()
+                                .tint(.primary)
+                        }
                     }
+                    
                 }
                 .sheet(isPresented: $vm.showAddNewFlight) {
                     AddNewFlightView(vm: vm)
-                        .presentationDetents([.height(200)])
+                        .presentationDetents([.height(250)])
                 }
         } .onAppear {
             vm.updateScreenState()

@@ -9,24 +9,13 @@ import SwiftUI
 
 struct EmptyListView: View {
     var body: some View {
-        ZStack {
-        Image(systemName: "arrow.turn.right.up")
-                .scaleEffect(1.6)
-                .padding(.trailing, 25)
-                .padding(.top, -45)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-        
-        
-            VStack(spacing: 20) {
+            VStack(spacing: 25) {
                 Text("Add new flight \nto track")
                 Image(systemName: "airplane.departure")
-                    .scaleEffect(1.5)
-        
-                
+                    .scaleEffect(1.5)  
             }
             .multilineTextAlignment(.center)
             .font(.largeTitle)
-        }
     }
 }
 
