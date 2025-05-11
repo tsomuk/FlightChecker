@@ -20,7 +20,7 @@ struct AddNewFlightView: View {
             textField
             
             if !vm.listOfFlightsNumbers.isEmpty {
-                RecentFactory(recentFlight: vm.listOfFlightsNumbers)
+                RecentFactory(recentFlight: vm.listOfFlightsNumbers, cleanHistoryAction: cleanHistoryButtonTapped)
             }
             
             addFlightButton
@@ -41,7 +41,7 @@ struct AddNewFlightView: View {
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(lineWidth: 0.8)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
     }
     
@@ -49,16 +49,19 @@ struct AddNewFlightView: View {
     private var addFlightButton: some View {
         Button {
             vm.addNewFlight(vm.newFlightNumber)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 dismiss()
             }
 //                    vm.fetchFlightDetail(flightNumber: vm.newFlightNumber)
             vm.newFlightNumber = ""
         } label: {
-            AviaButtonLabel(title: "ADD NEW FLIGHT", color: .white)
+            AviaButtonLabel(title: "ADD NEW FLIGHT", color: .primary)
         }
     }
     
+    private func cleanHistoryButtonTapped() {
+        vm.listOfFlightsNumbers.removeAll()
+    }
 }
 
 #Preview {

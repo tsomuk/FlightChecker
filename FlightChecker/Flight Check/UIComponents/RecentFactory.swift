@@ -10,6 +10,7 @@ import SwiftUI
 struct RecentFactory: View {
     
     var recentFlight: [String]
+    var cleanHistoryAction: () -> Void
     
     var body: some View {
         VStack {
@@ -23,25 +24,20 @@ struct RecentFactory: View {
                 Spacer()
                 
                 Button {
-    //                deleteRecent()
-    //                recentFlight.append("NEW12")
+                    cleanHistoryAction()
                 } label: {
                     Image(systemName: "x.circle")
                         .foregroundStyle(.foreground)
+                        .opacity(0.8)
                 }
             }
         }
     }
-    
-    func deleteRecent() {
-//        recentFlight.removeLast()
-    }
-    
 }
 
 #Preview {
-    var recentFlight: [String] = ["AF123", "AF113", "AF423", "AF123"]
-    RecentFactory(recentFlight: recentFlight)
+    let recentFlight: [String] = ["AF123", "AF113", "AF423", "AF123"]
+    RecentFactory(recentFlight: recentFlight, cleanHistoryAction: {})
         .padding(.horizontal, 12)
 }
 
