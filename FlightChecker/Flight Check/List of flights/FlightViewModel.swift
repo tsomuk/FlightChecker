@@ -15,30 +15,36 @@ final class FlightViewModel: ObservableObject {
     
     let networkService = NetworkService.shared
     
+    @Published var showBanner = false
+    @Published var bannerType: NotificationBannerType = .success
+    @Published var bannerTitle: String = ""
+    
     @Published var newFlightNumber = ""
     @Published var showAddNewFlight = false
-    @Published var listOfFlightsNumbers : [String] = []
-    @Published var listOfFlights: [FlightModel.FlightData] = []
     @Published var screenState: ScreenState = .empty
+    @Published var listOfFlights: [FlightModel.FlightData] = []
+    @Published var listOfFlightsNumbers : [String] = []
+    
+    var flightNumberForBanner: String = ""
     
     @MainActor
     func updateScreenState() {
+        print("🔄 Screen update called 🔄")
         if listOfFlights.isEmpty {
             screenState = .empty
         } else {
             screenState = .list
         }
+        flightNumberForBanner = ""
     }
     
     @MainActor
     func addNewFlight(_ number: String) {
         screenState = .loading
+        flightNumberForBanner = newFlightNumber
         Task {
-            listOfFlightsNumbers.append(number)
             fetchFlightDetail(flightNumber: number)
-            
         }
-        
     }
     
     @MainActor
@@ -48,29 +54,39 @@ final class FlightViewModel: ObservableObject {
         for flightNumber in listOfFlightsNumbers {
             fetchFlightDetail(flightNumber: flightNumber)
         }
-//        updateScreenState()
     }
     
     @MainActor
     func fetchFlightDetail(flightNumber: String) {
-//        screenState = .loading
         Task {
             do {
                 let flightData = try await networkService.requestFlightDetail(code: flightNumber)
+                
                 if let newFlightData = flightData.data.first {
                     print(newFlightData)
                     withAnimation {
                         listOfFlights.append(newFlightData)
+                        listOfFlightsNumbers.append(flightNumber)
                     }
-                    print("✅ Start sleep for 2 seconds")
+                    
                     try await Task.sleep(for: .seconds(1.2))
-                    print("🛜 End of sleep for 2 seconds")
+                    showSuccessBanner()
                     updateScreenState()
+                } else {
+                    print("❌ NO DATA. END SEARCH")
+                    try await Task.sleep(for: .seconds(1.2))
+                    showErrorBanner()
+                    updateScreenState()
+                    return
                 }
+                
             } catch {
+                showWarningBanner()
+                updateScreenState()
                 print(error.localizedDescription)
             }
         }
+        
     }
 }
 
@@ -81,11 +97,32 @@ extension FlightViewModel {
         listOfFlightsNumbers.move(fromOffsets: from, toOffset: to)
     }
     
+    @MainActor
     func deleteFlight(index: IndexSet) {
         withAnimation(.easeInOut(duration: 0.5)) {
             listOfFlights.remove(atOffsets: index)
             listOfFlightsNumbers.remove(atOffsets: index)
         }
+    }
+}
+
+extension FlightViewModel {
+    func showSuccessBanner() {
+        bannerType = .success
+        bannerTitle = "Рейс \(flightNumberForBanner) добавлен!"
+        showBanner = true
+    }
+    
+    func showErrorBanner() {
+        bannerType = .error
+        bannerTitle = "Рейс \(flightNumberForBanner) не найден!"
+        showBanner = true
+    }
+    
+    func showWarningBanner() {
+        bannerType = .warning
+        bannerTitle = "Ошибка связи с сервером. Повторите попытку"
+        showBanner = true
     }
 }
 

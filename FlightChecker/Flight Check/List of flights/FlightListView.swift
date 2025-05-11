@@ -23,6 +23,7 @@ struct FlightListView: View {
                     listWithButton
                 }
             }
+                       
             .navigationTitle("Favorite Flights")
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -44,7 +45,17 @@ struct FlightListView: View {
                     AddNewFlightView(vm: vm)
                         .presentationDetents([.height(250)])
                 }
-        } .onAppear {
+        }
+        .overlay {
+            if vm.showBanner {
+                NotificationBanner(
+                    type: vm.bannerType,
+                    text: vm.bannerTitle,
+                    onDismiss: { vm.showBanner = false }
+                )
+            }
+        }
+        .onAppear {
             vm.updateScreenState()
         }
     }
