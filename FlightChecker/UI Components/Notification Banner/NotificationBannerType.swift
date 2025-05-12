@@ -9,6 +9,7 @@ import SwiftUI
 
 enum NotificationBannerType {
     case success
+    case update
     case error
     case warning
     
@@ -22,6 +23,8 @@ enum NotificationBannerType {
             return .red
         case .warning:
             return .yellow
+        case .update:
+            return .green
         }
     }
     // Computed property to set icon
@@ -33,6 +36,8 @@ enum NotificationBannerType {
             return "exclamationmark.triangle"
         case .warning:
             return "exclamationmark.octagon"
+        case .update:
+            return "arrow.trianglehead.2.clockwise.rotate.90"
         }
     }
 }

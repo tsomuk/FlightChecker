@@ -113,6 +113,12 @@ extension FlightViewModel {
         showBanner = true
     }
     
+    func showUpdateBanner() {
+        bannerType = .success
+        bannerTitle = "Данные по рейсам обновлены"
+        showBanner = true
+    }
+    
     func showErrorBanner() {
         bannerType = .error
         bannerTitle = "Рейс \(flightNumberForBanner) не найден!"
