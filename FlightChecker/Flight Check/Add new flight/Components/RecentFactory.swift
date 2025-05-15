@@ -18,7 +18,7 @@ struct RecentFactory: View {
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 10) {
-                ForEach(recentFlight, id: \.self) { flight in
+                ForEach(recentFlight.reversed().prefix(4), id: \.self) { flight in
                     RecentCell(flightNumber: flight)
                 }
                 Spacer()
@@ -36,7 +36,7 @@ struct RecentFactory: View {
 }
 
 #Preview {
-    let recentFlight: [String] = ["AF123", "AF113", "AF423", "AF123"]
+    let recentFlight: [String] = ["AF123", "AF113", "AF423", "AF999"]
     RecentFactory(recentFlight: recentFlight, cleanHistoryAction: {})
         .padding(.horizontal, 12)
 }
