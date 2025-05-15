@@ -16,24 +16,29 @@ struct FlightListView: View {
             Group {
                 switch vm.screenState {
                 case .empty:
-                    EmptyListView()
+                    ContentUnavailableView(
+                        "No flights",
+                        systemImage: "airplane.departure",
+                        description:
+                            Text("Please add new flight to track")
+                    )
+                    
                 case .loading:
                     ProgressView().scaleEffect(2)
                 case .list:
                     listWithButton
                 }
             }
-                       
             .navigationTitle("Favorite Flights")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            vm.showAddNewFlight = true
-                        } label: {
-                            Image(systemName: "plus.square")
-                                .tint(.primary)
-                        }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        vm.showAddNewFlight = true
+                    } label: {
+                        Image(systemName: "plus.square")
+                            .tint(.primary)
                     }
+                }
                     if !vm.listOfFlightsNumbers.isEmpty {
                         ToolbarItem(placement: .topBarLeading) { EditButton()
                                 .tint(.primary)
@@ -43,7 +48,8 @@ struct FlightListView: View {
                 }
                 .sheet(isPresented: $vm.showAddNewFlight) {
                     AddNewFlightView(vm: vm)
-                        .presentationDetents([.height(250)])
+                        .presentationDragIndicator(.visible)
+                        .presentationDetents([.height(235)])
                 }
         }
         .overlay {

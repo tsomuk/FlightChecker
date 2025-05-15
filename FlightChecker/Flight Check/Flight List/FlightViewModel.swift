@@ -24,6 +24,8 @@ final class FlightViewModel: ObservableObject {
     @Published var screenState: ScreenState = .empty
     @Published var listOfFlights: [FlightModel.FlightData] = []
     @Published var listOfFlightsNumbers : [String] = []
+    @Published var historyOfSearch: [String] = []
+    //    @Published var historyOfSearch: [String] = ["AF123", "1H13", "AF623", "AF999", "AF623", "AF999"]
     
     var flightNumberForBanner: String = ""
     
@@ -41,7 +43,15 @@ final class FlightViewModel: ObservableObject {
     @MainActor
     func addNewFlight(_ number: String) {
         screenState = .loading
+        
+        // Check is flight number already in history or not
+        if !historyOfSearch.contains(newFlightNumber) {
+            withAnimation {
+                historyOfSearch.append(newFlightNumber)
+            }
+        }
         flightNumberForBanner = newFlightNumber
+        
         Task {
             fetchFlightDetail(flightNumber: number)
         }
@@ -103,6 +113,7 @@ extension FlightViewModel {
             listOfFlights.remove(atOffsets: index)
             listOfFlightsNumbers.remove(atOffsets: index)
         }
+        updateScreenState()
     }
 }
 
