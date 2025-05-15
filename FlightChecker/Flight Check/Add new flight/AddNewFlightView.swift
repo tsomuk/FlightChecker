@@ -11,22 +11,20 @@ struct AddNewFlightView: View {
     
     @ObservedObject var vm: FlightViewModel
     @Environment(\.dismiss) var dismiss
-    @FocusState var isFocus: Bool
-    
-    enum Focus { case newFlight }
-    
+        
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 12) {
             textField
+                .padding(.top,15)
             
-            if !vm.listOfFlightsNumbers.isEmpty {
-                RecentFactory(recentFlight: vm.listOfFlightsNumbers, cleanHistoryAction: cleanHistoryButtonTapped)
-            }
+            recentSearchesSection
             
             addFlightButton
+                .padding(.bottom, 10)
+            Spacer()
+            
             }
-            .padding(.horizontal)
-            .onAppear { isFocus = true }
+        .padding([.top, .horizontal])
     }
     
     private var textField: some View {
@@ -37,7 +35,6 @@ struct AddNewFlightView: View {
             .keyboardType(.webSearch)
             .tint(.primary)
             .padding()
-            .focused($isFocus)
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(lineWidth: 0.8)
@@ -45,25 +42,36 @@ struct AddNewFlightView: View {
             }
     }
     
+    private var recentSearchesSection: some View {
+        Group {
+            if !vm.historyOfSearch.isEmpty {
+                RecentFactory(recentFlight: vm.historyOfSearch, cleanHistoryAction: cleanHistoryButtonTapped)
+            }
+        }
+    }
     
     private var addFlightButton: some View {
         Button {
             vm.addNewFlight(vm.newFlightNumber)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            vm.newFlightNumber = ""
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
                 dismiss()
             }
-//                    vm.fetchFlightDetail(flightNumber: vm.newFlightNumber)
-            vm.newFlightNumber = ""
         } label: {
-            AviaButtonLabel(title: "ADD NEW FLIGHT", color: .primary)
+            AviaButtonLabel(title: "Add new flight", color: .primary)
         }
     }
     
     private func cleanHistoryButtonTapped() {
-        vm.listOfFlightsNumbers.removeAll()
+        withAnimation {
+            vm.historyOfSearch.removeAll()
+        }
     }
 }
 
 #Preview {
     AddNewFlightView(vm: FlightViewModel())
+        .frame(height: 235)
+        .background(Color.gray.opacity(0.2))
+        .cornerRadius(10)
 }

@@ -18,7 +18,6 @@ final class FlightViewModel: ObservableObject {
     @Published var showBanner = false
     @Published var bannerType: NotificationBannerType = .success
     @Published var bannerTitle: String = ""
-    
     @Published var newFlightNumber = ""
     @Published var showAddNewFlight = false
     @Published var screenState: ScreenState = .empty
