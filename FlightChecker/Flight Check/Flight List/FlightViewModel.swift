@@ -144,64 +144,6 @@ extension FlightViewModel {
 
 
 
-/*
- struct TestDTO: Codable {
- let id: Int?
- let plane: PlaneDTO?
- let objects: [ObjectDTO]?
- 
- struct ObjectDTO: Codable {
- let id: Int?
- let name: String?
- }
- 
- struct PlaneDTO: Codable {
- let id: Int?
- let model: String?
- }
- }
- 
- struct Test {
- let id: Int
- let objects: [Object]
- let planeId: Int
- let planeModel: String
- 
- struct Object {
- let id: Int
- let name: String
- }
- }
- 
- 
- func mapTest(_ dto: TestDTO) throws -> Test {
- guard let id = dto.id,
- let plane = dto.plane,
- let planeID = plane.id else { throw NetworkError.invalidData }
- 
- func mapObject(_ object: TestDTO.ObjectDTO) -> Test.Object {
- .init(
- id: object.id ?? 0,
- name: object.name ?? ""
- )
- }
- 
- let objects = dto.objects?.compactMap { objectDTO in
- return mapObject(objectDTO)
- } ?? []
- 
- return .init(
- id: id,
- objects: objects,
- planeId: planeID,
- planeModel: plane.model ?? ""
- )
- 
- }
- 
- */ //UI MODEL
-
-
 //    Данные для верстки и тестов
 //    @Published var listOfFlightsNumbers : [String] = ["fr269", "fr1215", "fr2357"]
 //    @Published var listOfFlightsNumbers: [String] = ["6H881", "6H882", "6H821"]

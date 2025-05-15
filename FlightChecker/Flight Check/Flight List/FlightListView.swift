@@ -1,72 +1,17 @@
 //
-//  FlightCardListView.swift
-//  Metar_SwiftUI
+//  FlightListView.swift
+//  FlightChecker
 //
-//  Created by Nikita Tsomuk on 30.09.2024.
+//  Created by Nikita Tsomuk on 15.05.2025.
 //
 
 import SwiftUI
 
 struct FlightListView: View {
     
-    @StateObject var vm = FlightViewModel()
+    @ObservedObject var vm: FlightViewModel
     
     var body: some View {
-        NavigationStack {
-            Group {
-                switch vm.screenState {
-                case .empty:
-                    ContentUnavailableView(
-                        "No flights",
-                        systemImage: "airplane.departure",
-                        description:
-                            Text("Please add new flight to track")
-                    )
-                    
-                case .loading:
-                    ProgressView().scaleEffect(2)
-                case .list:
-                    listWithButton
-                }
-            }
-            .navigationTitle("Favorite Flights")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        vm.showAddNewFlight = true
-                    } label: {
-                        Image(systemName: "plus.square")
-                            .tint(.primary)
-                    }
-                }
-                    if !vm.listOfFlightsNumbers.isEmpty {
-                        ToolbarItem(placement: .topBarLeading) { EditButton()
-                                .tint(.primary)
-                        }
-                    }
-                    
-                }
-                .sheet(isPresented: $vm.showAddNewFlight) {
-                    AddNewFlightView(vm: vm)
-                        .presentationDragIndicator(.visible)
-                        .presentationDetents([.height(235)])
-                }
-        }
-        .overlay {
-            if vm.showBanner {
-                NotificationBanner(
-                    type: vm.bannerType,
-                    text: vm.bannerTitle,
-                    onDismiss: { vm.showBanner = false }
-                )
-            }
-        }
-        .onAppear {
-            vm.updateScreenState()
-        }
-    }
-    
-    private var listWithButton: some View {
         VStack {
             List {
                 ForEach(vm.listOfFlights.self) { flightData in
@@ -74,7 +19,7 @@ struct FlightListView: View {
                         .listRowInsets(EdgeInsets())
                         .padding(.vertical, 15)
                         .padding(.horizontal, 16)
-                        .listRowSeparator(.hidden)                        
+                        .listRowSeparator(.hidden)
                 }
                 .onDelete(perform: vm.deleteFlight)
                 .onMove(perform: vm.moveFlight)
@@ -84,20 +29,20 @@ struct FlightListView: View {
             .scrollIndicators(.hidden)
             .listStyle(.plain)
             
-            
-          
             Button {
                 vm.updateAllFlights()
             } label: {
-                AviaButtonLabel(title: "UPDATE FLIGHTS STATUS", color: .primary)
+                AviaButtonLabel(title: "Update flight status", color: .primary)
                     .padding(.horizontal, 20)
             }
             .padding(.bottom, 15)
         }
-
+        .onAppear {
+            vm.updateScreenState()
+        }
     }
 }
 
 #Preview {
-    FlightListView()
+    FlightListView(vm: FlightViewModel())
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct TabbarView: View {
     var body: some View {
         TabView {
-            FlightListView()
+            MainScreenFactory()
                 .tabItem { Label("Flight check", systemImage: "airplane") }
             
             ServiceView()
