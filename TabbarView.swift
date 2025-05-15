@@ -13,7 +13,7 @@ struct TabbarView: View {
             FlightListView()
                 .tabItem { Label("Flight check", systemImage: "airplane") }
             
-            ServiceList()
+            ServiceView()
                 .tabItem { Label("Service", systemImage: "gearshape.2") }
         }
         .tint(.primary)

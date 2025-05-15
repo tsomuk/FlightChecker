@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ServiceList: View {
+struct ServiceView: View {
     
     @State var showBanner = false
     @State private var bannerType: NotificationBannerType = .success
@@ -121,5 +121,5 @@ struct ServiceList: View {
 
 
 #Preview {
-    ServiceList()
+    ServiceView()
 }

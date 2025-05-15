@@ -19,7 +19,6 @@ struct RecentCell: View {
                     .stroke(lineWidth: 1)
                     .foregroundStyle(.foreground)
             }
-            
     }
 }
 
