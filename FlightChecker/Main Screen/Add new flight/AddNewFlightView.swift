@@ -14,7 +14,7 @@ struct AddNewFlightView: View {
         
     var body: some View {
         VStack(spacing: 12) {
-            textField
+            textFieldWithButton
                 .padding(.top,15)
             
             recentSearchesSection
@@ -27,7 +27,7 @@ struct AddNewFlightView: View {
         .padding([.top, .horizontal])
     }
     
-    private var textField: some View {
+    private var textFieldWithButton: some View {
         TextField("Flight number", text: $vm.newFlightNumber)
             .autocorrectionDisabled()
             .textInputAutocapitalization(.characters)
@@ -35,6 +35,20 @@ struct AddNewFlightView: View {
             .keyboardType(.webSearch)
             .tint(.primary)
             .padding()
+            .overlay {
+                HStack {
+                    Spacer()
+                    if !vm.newFlightNumber.isEmpty {
+                        Button {
+                            cleanTextFieldButtonTapped()
+                        } label: {
+                            Image(systemName: "x.circle")
+                                .tint(.secondary)
+                                .padding(.trailing, 8)
+                        }
+                    }
+                }
+            }
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(lineWidth: 0.8)
@@ -63,6 +77,12 @@ struct AddNewFlightView: View {
             }
         } label: {
             AviaButtonLabel(title: "Add new flight", color: .primary)
+        }
+    }
+    
+    private func cleanTextFieldButtonTapped() {
+        withAnimation {
+            vm.newFlightNumber = ""
         }
     }
     

@@ -18,6 +18,7 @@ final class FlightViewModel: ObservableObject {
     @Published var showBanner = false
     @Published var bannerType: NotificationBannerType = .success
     @Published var bannerTitle: String = ""
+    
     @Published var newFlightNumber = ""
     @Published var showAddNewFlight = false
     @Published var screenState: ScreenState = .empty
@@ -44,19 +45,20 @@ final class FlightViewModel: ObservableObject {
         screenState = .loading
         
         // Check is flight number already in history or not
-        if !historyOfSearch.contains(newFlightNumber) && historyOfSearch.count > 2 {
+        if !historyOfSearch.contains(newFlightNumber) && newFlightNumber.count > 2 {
             withAnimation {
                 historyOfSearch.append(newFlightNumber)
             }
         }
         flightNumberForBanner = newFlightNumber
         
-        if historyOfSearch.count > 3 {
+        if newFlightNumber.count > 3 {
             Task {
                 fetchFlightDetail(flightNumber: number)
             }
         } else {
-            showErrorBannerLess3()
+            showBanner(type: .error, title: "Номер рейса не может быть менее 3х символов")
+            print(historyOfSearch.count)
             updateScreenState()
         }
     }
@@ -66,36 +68,42 @@ final class FlightViewModel: ObservableObject {
         screenState = .loading
         listOfFlights.removeAll()
         for flightNumber in listOfFlightsNumbers {
-            fetchFlightDetail(flightNumber: flightNumber)
+            fetchFlightDetail(flightNumber: flightNumber, isUpdate: true)
         }
     }
     
     @MainActor
-    func fetchFlightDetail(flightNumber: String) {
+    func fetchFlightDetail(flightNumber: String, isUpdate: Bool = false) {
         Task {
             do {
                 let flightData = try await networkService.requestFlightDetail(code: flightNumber)
                 
                 if let newFlightData = flightData.data.first {
-                    print(newFlightData)
+//                    print(newFlightData)
+                    
+                    // If update request - don't add flights again to lsit
+                    
                     withAnimation {
                         listOfFlights.append(newFlightData)
+                    }
+                    
+                    if !isUpdate {
                         listOfFlightsNumbers.append(flightNumber)
                     }
                     
                     try await Task.sleep(for: .seconds(1.2))
-                    showSuccessBanner()
+                    showBanner(type: .success, title: "Рейс \(flightNumberForBanner) добавлен!")
                     updateScreenState()
                 } else {
                     print("❌ NO DATA. END SEARCH")
                     try await Task.sleep(for: .seconds(1.2))
-                    showErrorBanner()
+                    showBanner(type: .error, title: "Рейс \(flightNumberForBanner) не найден!")
                     updateScreenState()
                     return
                 }
                 
             } catch {
-                showWarningBanner()
+                showBanner(type: .warning, title: "Ошибка связи с сервером. Повторите попытку")
                 updateScreenState()
                 print(error.localizedDescription)
             }
@@ -122,33 +130,9 @@ extension FlightViewModel {
 }
 
 extension FlightViewModel {
-    func showSuccessBanner() {
-        bannerType = .success
-        bannerTitle = "Рейс \(flightNumberForBanner) добавлен!"
-        showBanner = true
-    }
-    
-    func showUpdateBanner() {
-        bannerType = .success
-        bannerTitle = "Данные по рейсам обновлены"
-        showBanner = true
-    }
-    
-    func showErrorBanner() {
-        bannerType = .error
-        bannerTitle = "Рейс \(flightNumberForBanner) не найден!"
-        showBanner = true
-    }
-    
-    func showErrorBannerLess3() {
-        bannerType = .error
-        bannerTitle = "Номер рейса не может быть менее 3х символов"
-        showBanner = true
-    }
-    
-    func showWarningBanner() {
-        bannerType = .warning
-        bannerTitle = "Ошибка связи с сервером. Повторите попытку"
+    func showBanner(type: NotificationBannerType, title: String) {
+        bannerType = type
+        bannerTitle = title
         showBanner = true
     }
 }
