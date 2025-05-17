@@ -44,15 +44,20 @@ final class FlightViewModel: ObservableObject {
         screenState = .loading
         
         // Check is flight number already in history or not
-        if !historyOfSearch.contains(newFlightNumber) {
+        if !historyOfSearch.contains(newFlightNumber) && historyOfSearch.count > 2 {
             withAnimation {
                 historyOfSearch.append(newFlightNumber)
             }
         }
         flightNumberForBanner = newFlightNumber
         
-        Task {
-            fetchFlightDetail(flightNumber: number)
+        if historyOfSearch.count > 3 {
+            Task {
+                fetchFlightDetail(flightNumber: number)
+            }
+        } else {
+            showErrorBannerLess3()
+            updateScreenState()
         }
     }
     
@@ -132,6 +137,12 @@ extension FlightViewModel {
     func showErrorBanner() {
         bannerType = .error
         bannerTitle = "Рейс \(flightNumberForBanner) не найден!"
+        showBanner = true
+    }
+    
+    func showErrorBannerLess3() {
+        bannerType = .error
+        bannerTitle = "Номер рейса не может быть менее 3х символов"
         showBanner = true
     }
     
