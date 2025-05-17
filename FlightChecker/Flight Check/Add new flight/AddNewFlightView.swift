@@ -45,7 +45,11 @@ struct AddNewFlightView: View {
     private var recentSearchesSection: some View {
         Group {
             if !vm.historyOfSearch.isEmpty {
-                RecentFactory(recentFlight: vm.historyOfSearch, cleanHistoryAction: cleanHistoryButtonTapped)
+                RecentFactory(
+                    recentFlight: vm.historyOfSearch,
+                    cleanHistoryAction: cleanHistoryButtonTapped,
+                    tappedFlightNumber: $vm.newFlightNumber
+                )
             }
         }
     }

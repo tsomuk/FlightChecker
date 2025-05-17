@@ -13,6 +13,7 @@ struct RecentCell: View {
     
     var body: some View {
         Text(flightNumber)
+            .tint(.primary)
             .padding(10)
             .overlay {
                 RoundedRectangle(cornerRadius: 12)
@@ -23,5 +24,10 @@ struct RecentCell: View {
 }
 
 #Preview {
-    RecentCell(flightNumber: "AW123")
+    Button {
+        print("")
+    } label: {
+        RecentCell(flightNumber: "AW123")
+    }
+
 }
