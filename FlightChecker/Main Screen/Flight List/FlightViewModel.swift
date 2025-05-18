@@ -10,15 +10,16 @@ import SwiftUI
 enum ScreenState {
     case empty, loading, list
 }
-
+@MainActor
 final class FlightViewModel: ObservableObject {
-    
+    //Services
     let networkService = NetworkService.shared
-    
+    // Banner variables
     @Published var showBanner = false
     @Published var bannerType: NotificationBannerType = .success
     @Published var bannerTitle: String = ""
-    
+    var flightNumberForBanner: String = ""
+    // Flight variables
     @Published var newFlightNumber = ""
     @Published var showAddNewFlight = false
     @Published var screenState: ScreenState = .empty
@@ -26,11 +27,6 @@ final class FlightViewModel: ObservableObject {
     @Published var listOfFlightsNumbers : [String] = []
     @Published var historyOfSearch: [String] = []
 
-    //    @Published var historyOfSearch: [String] = ["AF123", "1H13", "AF623", "AF999", "AF623", "AF999"]
-    
-    var flightNumberForBanner: String = ""
-    
-    @MainActor
     func updateScreenState() {
         print("🔄 Screen update called 🔄")
         if listOfFlights.isEmpty {
@@ -41,7 +37,6 @@ final class FlightViewModel: ObservableObject {
         flightNumberForBanner = ""
     }
     
-    @MainActor
     func addNewFlight(_ number: String) {
         screenState = .loading
         
@@ -62,8 +57,7 @@ final class FlightViewModel: ObservableObject {
             print(historyOfSearch.count)
         }
     }
-    
-    @MainActor
+   
     func updateAllFlights() {
         screenState = .loading
         listOfFlights.removeAll()
@@ -77,7 +71,6 @@ final class FlightViewModel: ObservableObject {
         }
     }
     
-    @MainActor
     func fetchFlightDetail(flightNumber: String, isUpdate: Bool = false) {
         Task {
             do {
@@ -99,30 +92,25 @@ final class FlightViewModel: ObservableObject {
                     showBanner(type: .error, title: "Рейс \(flightNumberForBanner) не найден!")
                     return
                 }
-                
             } catch {
                 showBanner(type: .warning, title: "Ошибка связи с сервером. Повторите попытку")
                 print(error.localizedDescription)
             }
         }
-        
     }
-    
     
     private func saveFlightToHistory(_ flight: String) {
         listOfFlightsNumbers.append(flight)
     }
-    
 }
 
+// MARK: - Functions for the move & delete list item
 extension FlightViewModel {
-    // MARK: - FUNC FOR THE LIST
     func moveFlight(from: IndexSet, to: Int) {
         listOfFlights.move(fromOffsets: from, toOffset: to)
         listOfFlightsNumbers.move(fromOffsets: from, toOffset: to)
     }
     
-    @MainActor
     func deleteFlight(index: IndexSet) {
         withAnimation(.easeInOut(duration: 0.5)) {
             listOfFlights.remove(atOffsets: index)
@@ -132,8 +120,8 @@ extension FlightViewModel {
     }
 }
 
+// MARK: - Custom Banner
 extension FlightViewModel {
-    @MainActor
     func showBanner(type: NotificationBannerType, title: String) {
         bannerType = type
         bannerTitle = title
@@ -148,3 +136,4 @@ extension FlightViewModel {
 //    @Published var listOfFlightsNumbers : [String] = ["fr269", "fr1215", "fr2357"]
 //    @Published var listOfFlightsNumbers: [String] = ["6H881", "6H882", "6H821"]
 //    @Published var listOfFlights: [FlightModel.FlightData] = [FlightModel.MOCK_FlIGHT, FlightModel.MOCK_FlIGHT, FlightModel.MOCK_FlIGHT]
+//    @Published var historyOfSearch: [String] = ["AF123", "1H13", "AF623", "AF999", "AF623", "AF999"]
