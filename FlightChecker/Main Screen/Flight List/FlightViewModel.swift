@@ -25,6 +25,7 @@ final class FlightViewModel: ObservableObject {
     @Published var listOfFlights: [FlightModel.FlightData] = []
     @Published var listOfFlightsNumbers : [String] = []
     @Published var historyOfSearch: [String] = []
+
     //    @Published var historyOfSearch: [String] = ["AF123", "1H13", "AF623", "AF999", "AF623", "AF999"]
     
     var flightNumberForBanner: String = ""
@@ -52,14 +53,13 @@ final class FlightViewModel: ObservableObject {
         }
         flightNumberForBanner = newFlightNumber
         
-        if newFlightNumber.count > 3 {
+        if newFlightNumber.count > 2 {
             Task {
                 fetchFlightDetail(flightNumber: number)
             }
         } else {
-            showBanner(type: .error, title: "Номер рейса не может быть менее 3х символов")
+            showBanner(type: .error, title: "Номер рейса не может быть менее 2х символов")
             print(historyOfSearch.count)
-            updateScreenState()
         }
     }
     
@@ -70,6 +70,11 @@ final class FlightViewModel: ObservableObject {
         for flightNumber in listOfFlightsNumbers {
             fetchFlightDetail(flightNumber: flightNumber, isUpdate: true)
         }
+        
+        Task {
+            try await Task.sleep(for: .seconds(1.5))
+            showBanner(type: .update, title: "Данные по рейсам обновлены")
+        }
     }
     
     @MainActor
@@ -79,37 +84,35 @@ final class FlightViewModel: ObservableObject {
                 let flightData = try await networkService.requestFlightDetail(code: flightNumber)
                 
                 if let newFlightData = flightData.data.first {
-//                    print(newFlightData)
+                    
+                    withAnimation { listOfFlights.append(newFlightData) }
                     
                     // If update request - don't add flights again to lsit
-                    
-                    withAnimation {
-                        listOfFlights.append(newFlightData)
-                    }
-                    
                     if !isUpdate {
-                        listOfFlightsNumbers.append(flightNumber)
+                        saveFlightToHistory(flightNumber)
+                        try await Task.sleep(for: .seconds(1.2))
+                        showBanner(type: .success, title: "Рейс \(flightNumberForBanner) добавлен!")
                     }
-                    
-                    try await Task.sleep(for: .seconds(1.2))
-                    showBanner(type: .success, title: "Рейс \(flightNumberForBanner) добавлен!")
-                    updateScreenState()
                 } else {
                     print("❌ NO DATA. END SEARCH")
                     try await Task.sleep(for: .seconds(1.2))
                     showBanner(type: .error, title: "Рейс \(flightNumberForBanner) не найден!")
-                    updateScreenState()
                     return
                 }
                 
             } catch {
                 showBanner(type: .warning, title: "Ошибка связи с сервером. Повторите попытку")
-                updateScreenState()
                 print(error.localizedDescription)
             }
         }
         
     }
+    
+    
+    private func saveFlightToHistory(_ flight: String) {
+        listOfFlightsNumbers.append(flight)
+    }
+    
 }
 
 extension FlightViewModel {
@@ -130,10 +133,12 @@ extension FlightViewModel {
 }
 
 extension FlightViewModel {
+    @MainActor
     func showBanner(type: NotificationBannerType, title: String) {
         bannerType = type
         bannerTitle = title
         showBanner = true
+        updateScreenState()
     }
 }
 
