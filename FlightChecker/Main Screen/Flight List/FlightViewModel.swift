@@ -24,20 +24,14 @@ final class FlightViewModel: ObservableObject {
     @Published var newFlightNumber = ""
     @Published var showAddNewFlight = false
     @Published var screenState: ScreenState = .empty
-    @Published var listOfFlights: [FlightModel.FlightData] = []
-    @Published var listOfFlightsNumbers : [String] = []
-    @Published var historyOfSearch: [String] = []
-
-    func updateScreenState() {
-        print("🔄 Screen update called 🔄")
-        if listOfFlights.isEmpty {
-            screenState = .empty
-        } else {
-            screenState = .list
-        }
-        flightNumberForBanner = ""
     @Published var flights: [FlightModel.FlightData] = []
     @Published var flightsNumbers : [String] = []
+    @Published var historyOfSearch: [String] = [] {
+        didSet { saveHistory() }
+    }
+    
+    init() {
+        historyOfSearch = UserDefaults.standard.array(forKey: UDKeys.historyOfSearch) as? [String] ?? []
     }
     
     func addNewFlight(_ number: String) {
@@ -106,7 +100,7 @@ final class FlightViewModel: ObservableObject {
         UserDefaults.standard.set(historyOfSearch, forKey: UDKeys.historyOfSearch)
     }
 
-    private func updateScreenState() {
+    func updateScreenState() {
         print("🔄 Screen update called 🔄")
         if flights.isEmpty {
             screenState = .empty
