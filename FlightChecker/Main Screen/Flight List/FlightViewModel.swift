@@ -10,6 +10,7 @@ import SwiftUI
 enum ScreenState {
     case empty, loading, list
 }
+
 @MainActor
 final class FlightViewModel: ObservableObject {
     //Services
@@ -35,20 +36,22 @@ final class FlightViewModel: ObservableObject {
             screenState = .list
         }
         flightNumberForBanner = ""
+    @Published var flights: [FlightModel.FlightData] = []
+    @Published var flightsNumbers : [String] = []
     }
     
     func addNewFlight(_ number: String) {
         screenState = .loading
         
         // Check is flight number already in history or not
-        if !historyOfSearch.contains(newFlightNumber) && newFlightNumber.count > 2 {
+        if !historyOfSearch.contains(newFlightNumber) && newFlightNumber.count > Constants.minFlightNumberLength {
             withAnimation {
                 historyOfSearch.append(newFlightNumber)
             }
         }
         flightNumberForBanner = newFlightNumber
         
-        if newFlightNumber.count > 2 {
+        if newFlightNumber.count > Constants.minFlightNumberLength {
             Task {
                 fetchFlightDetail(flightNumber: number)
             }
@@ -60,8 +63,8 @@ final class FlightViewModel: ObservableObject {
    
     func updateAllFlights() {
         screenState = .loading
-        listOfFlights.removeAll()
-        for flightNumber in listOfFlightsNumbers {
+        flights.removeAll()
+        for flightNumber in flightsNumbers {
             fetchFlightDetail(flightNumber: flightNumber, isUpdate: true)
         }
         
@@ -78,7 +81,7 @@ final class FlightViewModel: ObservableObject {
                 
                 if let newFlightData = flightData.data.first {
                     
-                    withAnimation { listOfFlights.append(newFlightData) }
+                    withAnimation { flights.append(newFlightData) }
                     
                     // If update request - don't add flights again to lsit
                     if !isUpdate {
@@ -99,22 +102,36 @@ final class FlightViewModel: ObservableObject {
         }
     }
     
+    private func saveHistory() {
+        UserDefaults.standard.set(historyOfSearch, forKey: UDKeys.historyOfSearch)
+    }
+
+    private func updateScreenState() {
+        print("🔄 Screen update called 🔄")
+        if flights.isEmpty {
+            screenState = .empty
+        } else {
+            screenState = .list
+        }
+        flightNumberForBanner = ""
+    }
+    
     private func saveFlightToHistory(_ flight: String) {
-        listOfFlightsNumbers.append(flight)
+        flightsNumbers.append(flight)
     }
 }
 
 // MARK: - Functions for the move & delete list item
 extension FlightViewModel {
     func moveFlight(from: IndexSet, to: Int) {
-        listOfFlights.move(fromOffsets: from, toOffset: to)
-        listOfFlightsNumbers.move(fromOffsets: from, toOffset: to)
+        flights.move(fromOffsets: from, toOffset: to)
+        flightsNumbers.move(fromOffsets: from, toOffset: to)
     }
     
     func deleteFlight(index: IndexSet) {
         withAnimation(.easeInOut(duration: 0.5)) {
-            listOfFlights.remove(atOffsets: index)
-            listOfFlightsNumbers.remove(atOffsets: index)
+            flights.remove(atOffsets: index)
+            flightsNumbers.remove(atOffsets: index)
         }
         updateScreenState()
     }

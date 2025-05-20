@@ -19,11 +19,6 @@ enum RequestMethod: String {
     case get = "GET"
     case post = "POST"
 }
-
-enum ApiKey: String {
-    case flightApiKey = "access_key=ab4495bf0c1fb85a94230c9e67b2b2d0"
-    case flightApiKeyReserve = "access_key=8dfc79dff80781b21c079ff4a3f0481e"
-}
     
 enum Endpoint {
     static func flight(code: String) -> String { "https://api.aviationstack.com/v1/flights?flight_iata=\(code)&" }

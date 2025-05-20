@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		11A47D242CCE3EEC0062704B /* FlightCheckerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A47D232CCE3EEC0062704B /* FlightCheckerApp.swift */; };
 		11A47D322CCE445B0062704B /* TabbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A47D312CCE445B0062704B /* TabbarView.swift */; };
+		11E25A0E2DDB328E00F988E6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E25A0D2DDB328E00F988E6 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		11A47D202CCE3EEC0062704B /* FlightChecker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlightChecker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11A47D232CCE3EEC0062704B /* FlightCheckerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCheckerApp.swift; sourceTree = "<group>"; };
 		11A47D312CCE445B0062704B /* TabbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarView.swift; sourceTree = "<group>"; };
+		11E25A0D2DDB328E00F988E6 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +41,7 @@
 		11A47D172CCE3EEC0062704B = {
 			isa = PBXGroup;
 			children = (
+				11E25A0D2DDB328E00F988E6 /* Constants.swift */,
 				11A47D232CCE3EEC0062704B /* FlightCheckerApp.swift */,
 				11A47D312CCE445B0062704B /* TabbarView.swift */,
 				11A47D222CCE3EEC0062704B /* FlightChecker */,
@@ -129,6 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				11A47D322CCE445B0062704B /* TabbarView.swift in Sources */,
+				11E25A0E2DDB328E00F988E6 /* Constants.swift in Sources */,
 				11A47D242CCE3EEC0062704B /* FlightCheckerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

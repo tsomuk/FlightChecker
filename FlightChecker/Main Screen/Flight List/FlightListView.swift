@@ -14,7 +14,7 @@ struct FlightListView: View {
     var body: some View {
         VStack {
             List {
-                ForEach(vm.listOfFlights.self) { flightData in
+                ForEach(vm.flights.self) { flightData in
                     FlightCell(flightData: flightData)
                         .listRowInsets(EdgeInsets())
                         .padding(.vertical, 15)

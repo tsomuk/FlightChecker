@@ -35,7 +35,7 @@ struct MainScreenFactory: View {
                             .tint(.primary)
                     }
                 }
-                if !vm.listOfFlightsNumbers.isEmpty {
+                if !vm.flightsNumbers.isEmpty {
                     ToolbarItem(placement: .topBarLeading) { EditButton()
                             .tint(.primary)
                     }

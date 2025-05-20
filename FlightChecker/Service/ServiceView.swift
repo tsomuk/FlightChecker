@@ -53,11 +53,11 @@ struct ServiceView: View {
                 VStack (spacing: 12) {
                     imageWithText("Api Doc")
                     
-                    Link(destination: URL(string: "https://aviationstack.com/dashboard")!) {
+                    Link(destination: URL(string: Constants.apiDashboard)!) {
                         AviaButtonLabel(title: "Dashboard", color: .accent)
                     }
                     
-                    Link(destination: URL(string: "https://aviationstack.com/documentation")!) {
+                    Link(destination: URL(string: Constants.apiDashboard)!) {
                         AviaButtonLabel(title: "Documentation", color: .accent)
                     }
                 }
