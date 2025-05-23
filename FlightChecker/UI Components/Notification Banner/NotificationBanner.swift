@@ -85,24 +85,21 @@ struct NotificationBanner: View {
             type: .success,
             text: "Ууууууууспех",
             duration: 2.0,
-            onDismiss: {},
-//            animation: .bouncy
+            onDismiss: {}
         )
         
         NotificationBanner(
             type: .error,
             text: "Проваааал",
             duration: 2.0,
-            onDismiss: {},
-//            animation: .bouncy
+            onDismiss: {}
         )
         
         NotificationBanner(
             type: .warning,
             text: "Предупрежденииие",
             duration: 2.0,
-            onDismiss: {},
-//            animation: .bouncy
+            onDismiss: {}
         )
     }
 }

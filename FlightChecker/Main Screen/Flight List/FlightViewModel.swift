@@ -35,6 +35,17 @@ final class FlightViewModel: ObservableObject {
     }
     
     func addNewFlight(_ number: String) {
+        flightNumberForBanner = newFlightNumber
+        
+        guard !flightsNumbers.contains(number) else {
+            Task{
+                try await Task.sleep(for: .seconds(1.0))
+                showBanner(type: .warning, title: "Рейс \(flightNumberForBanner) уже отслеживается")
+            }
+            print("❌ Дубликат. Отмена поиска")
+            return
+        }
+        
         screenState = .loading
         
         // Check is flight number already in history or not
@@ -43,7 +54,6 @@ final class FlightViewModel: ObservableObject {
                 historyOfSearch.append(newFlightNumber)
             }
         }
-        flightNumberForBanner = newFlightNumber
         
         if newFlightNumber.count > Constants.minFlightNumberLength {
             Task {
