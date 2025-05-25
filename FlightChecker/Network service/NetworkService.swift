@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 //API INFO
 /*
@@ -39,6 +40,16 @@ struct AnyEncodable: Encodable {
 
 
 final class NetworkService {
+    @AppStorage(UDKeys.apiKey) var apiKey: ApiKeyType = .primary
+    
+    private func toggleApiKey() {
+        if apiKey == .primary {
+            apiKey = .reserve
+        } else {
+            apiKey = .primary
+        }
+        print(apiKey == .primary ? "⚠️ Теперь используется основной ключ" : "⚠️ Теперь используется резервный ключ")
+    }
     
     static let shared = NetworkService()
     private init() {}
@@ -46,7 +57,6 @@ final class NetworkService {
 // MARK: - fetchRequest
     private func fetchRequest<T: Decodable>(
         endpoint: String,
-        apiKey: ApiKey,
         method: RequestMethod,
         encodableData: Encodable? = nil,
         useFallback: Bool = true
@@ -66,7 +76,7 @@ final class NetworkService {
                 let encodable = AnyEncodable(encodableData)
                 request.httpBody = try JSONEncoder().encode(encodable)
             } catch {
-                
+                throw NetworkError.encodingError(underline: error)
             }
         }
         
@@ -79,9 +89,9 @@ final class NetworkService {
         
         // Use reserve api key if basic reach monthly limit
         if httpResponse.statusCode == 429, useFallback {
+            toggleApiKey()
             return try await fetchRequest(
                 endpoint: endpoint,
-                apiKey: .flightApiKeyReserve,
                 method: method,
                 encodableData: encodableData,
                 useFallback: false
@@ -108,7 +118,7 @@ final class NetworkService {
 // MARK: - NetworkService request functions
 extension NetworkService {
     func requestFlightDetail(code: String) async throws -> FlightModel {
-        try await fetchRequest(endpoint: Endpoint.flight(code: code), apiKey: .flightApiKey, method: .get)
+        try await fetchRequest(endpoint: Endpoint.flight(code: code), method: .get)
     }
 }
 

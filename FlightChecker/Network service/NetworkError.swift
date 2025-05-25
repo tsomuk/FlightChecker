@@ -16,25 +16,28 @@ enum NetworkError: Error, LocalizedError {
     case emptyAccessToken
     case invalidAccessToken
     case unknown(Error)
+    case encodingError(underline: Error)
     
     var errorDescription: String? {
         switch self {
-            case .invalidURL:
-                return "Ошибка запроса"
-            case .requestFailed(let statusCode):
-                return "[requestFailed] Некорректный запрос. httpResponse.statusCode: \(statusCode)"
-            case .invalidData:
-                return "[invalidData] Некорректные данные"
-            case .invalidResponse:
-                return "[invalidResponse] Некорректные данные"
-            case .parsingError(let underline):
-                return "[parsingError] Ошибка парсинга данных \n\(underline)"
-            case .emptyAccessToken:
-                return "[emptyAccessToken] Ошибка токена"
-            case .invalidAccessToken:
-                return "Токен недействителен или просрочен"
-            case .unknown(let error):
-                return error.localizedDescription
+        case .invalidURL:
+            return "[invalidURL] Ошибка запроса"
+        case .requestFailed(let statusCode):
+            return "[requestFailed] Некорректный запрос. httpResponse.statusCode: \(statusCode)"
+        case .invalidData:
+            return "[invalidData] Некорректные данные"
+        case .invalidResponse:
+            return "[invalidResponse] Некорректные данные"
+        case .parsingError(let underline):
+            return "[parsingError] Ошибка парсинга данных \n\(underline)"
+        case .emptyAccessToken:
+            return "[emptyAccessToken] Ошибка токена"
+        case .invalidAccessToken:
+            return "[invalidAccessToken] Токен недействителен или просрочен"
+        case .encodingError(let error):
+            return "[encodingError]" + error.localizedDescription
+        case .unknown(let error):
+            return "[unknown]" + error.localizedDescription
         }
     }
 }
