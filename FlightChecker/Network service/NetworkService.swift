@@ -43,12 +43,8 @@ final class NetworkService {
     @AppStorage(UDKeys.apiKey) var apiKey: ApiKeyType = .primary
     
     private func toggleApiKey() {
-        if apiKey == .primary {
-            apiKey = .reserve
-        } else {
-            apiKey = .primary
-        }
-        print(apiKey == .primary ? "⚠️ Теперь используется основной ключ" : "⚠️ Теперь используется резервный ключ")
+        apiKey = apiKey.toggled
+        print("⚠️ Теперь используется \(apiKey.description) ключ")
     }
     
     static let shared = NetworkService()
